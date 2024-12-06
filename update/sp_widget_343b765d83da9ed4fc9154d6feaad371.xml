@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[function($rootScope,$scope) {
+	/* widget controller */
+	var c = this;
+
+	c.selectItem = function(index) {	
+		var id =	c.data.notes[index].sys_id;
+		console.log('Dear JD, Note ID je : ' + id);
+
+		$rootScope.noteIDENTIFIKATOR = id;
+		$rootScope.$emit('selectNote', id);
+	}
+
+
+	//The Notes List widget will listen for the event and 
+	//will update the appropriate record in the list in response to the event.
+	//	var updatedNoteID = c.data.noteID;
+	//	$rootScope.updNOTEID = updatedNoteID;
+	//	$rootScope.$emit('updateNote', updatedNoteID);
+
+	$rootScope.$on('updateNote', function(event,data) { 
+
+		c.server.get({  
+			action: 'updateNote',
+			noteID: $rootScope.updNOTEID, // == updatedNoteID;
+		}).then(function(r){  			
+		});
+	}); 
+
+}]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.city {
+  background-color: tomato;
+  color: white;
+  padding: 10px;
+} 
+.main {
+  text-align: center;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>notes_list</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Notes List</name>
+        <option_schema/>
+        <public>true</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	/* populate the 'data' object */
+	/* e.g., data.table = $sp.getValue('table'); */
+
+	data.notes = [];
+
+	var noteGR = new GlideRecord('x_snc_createnotes_note');	// sys_created_on
+
+	var user1 = gs.getUser().getID();
+	//var user2 = '' ; // gs.getUserID();	
+	$sp.log("Dear JD, user 1 is: " + user1);
+	noteGR.addQuery('user',gs.getUser().getID());
+	//	Sort the records by descending order based on the sys_created_on date field value
+	noteGR.orderByDesc('sys_created_on');
+	//For each of the Note records returned
+	noteGR.query();
+	while(noteGR.next()){
+		// Create an empty object, noteObj
+		var noteObj = {};
+		// Get the display values for the number, title, and sys_id fields and put those values into the noteObj object
+		// Number, User, Titul, Note
+		$sp.getRecordDisplayValues(noteObj, noteGR, 'user, number , title, note, sys_id');
+
+		// getRecordDisplayValues(data, from: fn(tableName: string), names: string)
+		// getRecordDisplayValues(): copies display values for the specified fields into the data parameter
+
+		//get the first 20 characters of the description
+		noteObj.note = noteGR.getValue('note').slice(0,20);
+		data.notes.push(noteObj);
+	}
+
+
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2024-12-05 07:50:24</sys_created_on>
+        <sys_id>343b765d83da9ed4fc9154d6feaad371</sys_id>
+        <sys_mod_count>78</sys_mod_count>
+        <sys_name>Notes List</sys_name>
+        <sys_package display_value="CreateNotes" source="x_snc_createnotes">df5fd9a5090232007f44e1046c8ff69f</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="CreateNotes">df5fd9a5090232007f44e1046c8ff69f</sys_scope>
+        <sys_update_name>sp_widget_343b765d83da9ed4fc9154d6feaad371</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2024-12-06 20:20:11</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default" >
+  <div class="panel-heading clearfix">	
+    <h3 class="panel-title pull-left"> 
+      ${Notes}
+    </h3> 
+  </div>
+  <div class="panel-body city main list-group">
+    <a class="list-group-item" ng-click="c.selectItem($index)" ng-repeat="note in data.notes"> 
+
+      <h4 class="list-group-item-heading">
+        {{note.title}}
+      </h4>
+      
+      <p class="list-group-item-text">
+        {{note.note}}
+      </p>
+       <p class="list-group-item-text">
+        {{note.number}}
+      </p>
+      <p class="list-group-item-text">
+        {{note.user}}
+      </p>
+      <p class="list-group-item-text">
+        {{note.sys_id}}
+      </p>
+
+    </a>
+
+  </div>
+  <!-- your widget template -->
+</div>]]></template>
+    </sp_widget>
+</record_update>
