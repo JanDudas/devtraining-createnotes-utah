@@ -22,10 +22,15 @@
 
 	$rootScope.$on('updateNote', function(event,data) { 
 
-		c.server.get({  
-			action: 'updateNote',
-			noteID: $rootScope.updNOTEID, // == updatedNoteID;
-		}).then(function(r){  			
+		c.server.get({		 
+		}).then(function(r){ 
+			//var title = r.data.title;
+			//var body = r.data.note;
+			//$rootScope.$emit('updateNote', title, body)
+
+			c.data.title = r.data.title;
+			c.data.note = r.data.note;
+
 		});
 	}); 
 
@@ -90,14 +95,14 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2024-12-05 07:50:24</sys_created_on>
         <sys_id>343b765d83da9ed4fc9154d6feaad371</sys_id>
-        <sys_mod_count>78</sys_mod_count>
+        <sys_mod_count>81</sys_mod_count>
         <sys_name>Notes List</sys_name>
         <sys_package display_value="CreateNotes" source="x_snc_createnotes">df5fd9a5090232007f44e1046c8ff69f</sys_package>
         <sys_policy/>
         <sys_scope display_value="CreateNotes">df5fd9a5090232007f44e1046c8ff69f</sys_scope>
         <sys_update_name>sp_widget_343b765d83da9ed4fc9154d6feaad371</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2024-12-06 20:20:11</sys_updated_on>
+        <sys_updated_on>2024-12-06 22:08:17</sys_updated_on>
         <template><![CDATA[<div class="panel panel-default" >
   <div class="panel-heading clearfix">	
     <h3 class="panel-title pull-left"> 
